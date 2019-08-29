@@ -4,6 +4,8 @@
 ;; Without this comment emacs25 adds (package-initialize) here
 ;; (package-initialize)
 
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (push (expand-file-name "~/.emacs.d/lisp") load-path)
 
 (let* ((minver "24.4"))
@@ -129,6 +131,10 @@
   ;; need statistics of keyfreq asap
   (require-init 'init-keyfreq)
   (require-init 'init-httpd)
+  ;; add matlab 
+  (require-init 'init-matlab)
+  ;; add auctex
+  (require-init 'init-auctex)
 
   ;; projectile costs 7% startup time
 

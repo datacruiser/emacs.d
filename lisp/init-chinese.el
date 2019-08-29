@@ -53,7 +53,7 @@
      (setq pyim-enable-shortcode nil)
 
      ;; use western punctuation
-     (setq pyim-punctuation-dict nil)
+    ;; (setq pyim-punctuation-dict nil)
      (setq default-input-method "pyim")
 
      ;; automatically load all "*.pyim" under "~/.eim/"
@@ -80,9 +80,20 @@
      ;;  pyim-bigdict is recommended (20M). There are many useless words in pyim-greatdict which also slows
      ;;  down pyim performance
      ;; `curl -L http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz | zcat > ~/.eim/pyim-bigdict.pyim`
+     ;; 开启拼音搜索功能
 
-     ;; don't use tooltip
-     (setq pyim-use-tooltip 'popup)))
+     (pyim-isearch-mode 1)
+
+     ;; 选词框显示9个候选词
+     (setq pyim-page-length 9)
+
+     (setq pyim-punctuation-translate-p '(auto yes no))   ;中文使用全角标点，英文使用半角标点。
+
+     (define-key map "." 'pyim-page-next-page)
+     (define-key map "," 'pyim-page-previous-page)
+
+     ;;use tooltip
+     (setq pyim-use-tooltip 'posframe)))
 ;; }}
 
 ;; {{ cal-china-x setup
