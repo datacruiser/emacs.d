@@ -53,7 +53,7 @@
      (setq pyim-enable-shortcode nil)
 
      ;; use western punctuation
-    ;; (setq pyim-punctuation-dict nil)
+     (setq pyim-punctuation-dict nil)
      (setq default-input-method "pyim")
 
      ;; automatically load all "*.pyim" under "~/.eim/"
@@ -87,10 +87,29 @@
      ;; 选词框显示9个候选词
      (setq pyim-page-length 9)
 
-     (setq pyim-punctuation-translate-p '(auto yes no))   ;中文使用全角标点，英文使用半角标点。
+     ;;(setq pyim-punctuation-translate-p '(auto yes no))   ;中文使用全角标点，英文使用半角标点。
 
-     (define-key map "." 'pyim-page-next-page)
-     (define-key map "," 'pyim-page-previous-page)
+     ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+     ;; 我自己使用的中英文动态切换规则是：
+     ;; 1. 光标只有在注释里面时，才可以输入中文。
+     ;; 2. 光标前是汉字字符时，才能输入中文。
+     ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+     ;(setq-default pyim-english-input-switch-functions
+           ;     '(pyim-probe-dynamic-english
+          ;        pyim-probe-isearch-mode
+         ;         pyim-probe-program-mode
+        ;          pyim-probe-org-structure-template))
+
+     ;(setq-default pyim-punctuation-half-width-functions
+      ;          '(pyim-probe-punctuation-line-beginning
+       ;           pyim-probe-punctuation-after-punctuation))
+
+     ;(define-key map "." 'pyim-page-next-page)
+     ;(define-key map "," 'pyim-page-previous-page)
+
+      :bind
+    ; (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+     ;("C-;" . pyim-delete-word-from-personal-buffer))
 
      ;;use tooltip
      (setq pyim-use-tooltip 'posframe)))
