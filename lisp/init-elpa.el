@@ -54,6 +54,7 @@
     darkburn-theme
     ujelly-theme
     afternoon-theme
+    hexo
     organic-green-theme
     inkpot-theme
     flatui-theme
