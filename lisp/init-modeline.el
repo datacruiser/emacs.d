@@ -6,17 +6,28 @@
 ;; use setq-default to set it for /all/ modes
 (setq-default mode-line-format
   (list
-    ;; the buffer name; the file name as a tool tip
+   ;; the buffer name; the file name as a tool tip
+   " "
+   "["
     '(:eval (propertize "%b " 'face nil
         'help-echo (buffer-file-name)))
-
+    "] "
+    
     ;; line and column
-    "(" ;; '%02' to set to 2 chars at least; prevents flickering
+    "[" ;; '%02' to set to 2 chars at least; prevents flickering
     "%02l" "," "%01c"
       ;; (propertize "%02l" 'face 'font-lock-type-face) ","
       ;; (propertize "%02c" 'face 'font-lock-type-face)
-    ") "
+    "] "
 
+    ;; relative position, size of file
+    "["
+    (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
+    "/"
+    (propertize "%I" 'face 'font-lock-constant-face) ;; size
+    "] "
+
+    
     ;; the current major mode for the buffer.
     "["
 
@@ -43,6 +54,12 @@
                              'face nil
                              'help-echo "Buffer is read-only"))))
     "] "
+
+    
+    ;; git info
+    `(vc-mode vc-mode)
+
+    " "
 
     ;;global-mode-string, org-timer-set-timer in org-mode need this
     (propertize "%M" 'face nil)
