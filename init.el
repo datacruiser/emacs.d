@@ -167,6 +167,9 @@
 (when (require 'time-date nil t)
   (message "Emacs startup time: %d seconds."
            (time-to-seconds (time-since emacs-load-start-time))))
+;; fix exec-path-from-shell
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 ;;; Local Variables:
 ;;; no-byte-compile: t
