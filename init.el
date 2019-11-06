@@ -138,10 +138,8 @@
   (require-init 'init-matlab)
   ;; add auctex
   (require-init 'init-auctex)
-=======
   (require-init 'init-keyfreq t)
   (require-init 'init-httpd t)
->>>>>>> 6e31cde158e67445ad10067cfc17f6bd468074c3
 
   ;; projectile costs 7% startup time
 
