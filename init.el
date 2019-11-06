@@ -131,7 +131,6 @@
   (require-init 'init-company t)
   (require-init 'init-chinese t) ;; cannot be idle-required
   ;; need statistics of keyfreq asap
-<<<<<<< HEAD
   (require-init 'init-keyfreq)
   (require-init 'init-httpd)
   ;; add matlab 
