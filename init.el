@@ -19,6 +19,9 @@
 ;; don't GC during startup to save time
 (setq gc-cons-threshold most-positive-fixnum)
 
+;; set the default-directory to the blogs 
+(setq default-directory "~/Documents/Blogs/datacruiser.github.io/source/_posts/" )
+
 (setq emacs-load-start-time (current-time))
 
 ;; {{ emergency security fix
