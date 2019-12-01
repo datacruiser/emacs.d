@@ -187,3 +187,18 @@
 ;;; no-byte-compile: t
 ;;; End:
 (put 'erase-buffer 'disabled nil)
+
+
+(setq load-path (cons (file-truename "~/.emacs.d/") load-path))
+
+(require 'pyim)
+(require 'posframe)
+(require 'liberime)
+
+(setq default-input-method "pyim")
+(setq pyim-page-tooltip 'posframe)
+(setq pyim-page-length 9)
+
+(liberime-start "/Library/Input Methods/Squirrel.app/Contents/SharedSupport" (file-truename "~/.emacs.d/pyim/rime/"))
+(liberime-select-schema "luna_pinyin_simp")
+(setq pyim-default-scheme 'rime-quanpin)
