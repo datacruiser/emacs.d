@@ -159,17 +159,16 @@
 ;; don't let the cursor go into minibuffer prompt
 (setq minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
 
-;; Don't echo passwords when communicating with interactive programs:
-;; Github prompt is like "Password for 'https://user@github.com/':"
-(setq comint-password-prompt-regexp (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
-(add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt)
-
-;; {{ which-key-mode
-(local-require 'which-key)
-(setq which-key-allow-imprecise-window-fit t) ; performance
-(setq which-key-separator ":")
-(which-key-mode 1)
-;; }}
+(eval-after-load 'comint
+  '(progn
+     ;; But don't show trailing whitespace in REPL.
+     (add-hook 'comint-mode-hook
+               (lambda () (setq show-trailing-whitespace nil)))
+     ;; Don't echo passwords when communicating with interactive programs:
+     ;; Github prompt is like "Password for 'https://user@github.com/':"
+     (setq comint-password-prompt-regexp
+           (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
+     (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt)))
 
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-m") 'counsel-M-x)
@@ -177,15 +176,16 @@
 (defvar my-do-bury-compliation-buffer t
   "Hide comliation buffer if compile successfully.")
 
-(defun compilation-finish-hide-buffer-on-success (buf str)
-  "Could be reused by other major-mode after compilation."
+(defun compilation-finish-hide-buffer-on-success (buffer str)
+  "Bury BUFFER whose name marches STR.
+This function can be re-used by other major modes after compilation."
   (if (string-match "exited abnormally" str)
       ;;there were errors
       (message "compilation errors, press C-x ` to visit")
     ;;no errors, make the compilation window go away in 0.5 seconds
     (when (and my-do-bury-compliation-buffer
-               (buffer-name buf)
-               (string-match "*compilation*" (buffer-name buf)))
+               (buffer-name buffer)
+               (string-match "*compilation*" (buffer-name buffer)))
       ;; @see http://emacswiki.org/emacs/ModeCompile#toc2
       (bury-buffer "*compilation*")
       (winner-undo)
@@ -244,13 +244,12 @@
 ;; (add-hook 'org-mode-hook 'truncate-lines-setup)
 ;; }}
 
-;; turns on auto-fill-mode, don't use text-mode-hook because for some
+;; turn on auto-fill-mode, don't use `text-mode-hook' because for some
 ;; mode (org-mode for example), this will make the exported document
 ;; ugly!
 ;; (add-hook 'markdown-mode-hook 'turn-on-auto-fill)
 (add-hook 'change-log-mode-hook 'turn-on-auto-fill)
 (add-hook 'cc-mode-hook 'turn-on-auto-fill)
-(global-set-key (kbd "C-c q") 'auto-fill-mode)
 
 ;; some project prefer tab, so be it
 ;; @see http://stackoverflow.com/questions/69934/set-4-space-indent-in-emacs-in-text-mode
@@ -352,9 +351,14 @@
 (defun my-which-function ()
   "Return current function name."
   ;; clean the imenu cache
+  (which-function)
   ;; @see http://stackoverflow.com/questions/13426564/how-to-force-a-rescan-in-imenu-by-a-function
-  (setq imenu--index-alist nil)
-  (which-function))
+  ;; (let* ((imenu-create-index-function (if (my-use-tags-as-imenu-function-p)
+  ;;                                         'counsel-etags-imenu-default-create-index-function
+  ;;                                       imenu-create-index-function)))
+  ;;   (setq imenu--index-alist nil)
+  ;;   (which-function))
+  )
 
 (defun popup-which-function ()
   (interactive)
@@ -895,6 +899,19 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
   (interactive)
   (pickup-random-color-theme (custom-available-themes)))
 
+(defun random-healthy-color-theme (join-dark-side)
+  "Random healthy color theme.
+When join-dark-side is t, pick up dark theme only."
+  (interactive "P")
+  (let* (themes
+         (hour (string-to-number (format-time-string "%H" (current-time))))
+         (prefer-light-p (and (not join-dark-side) (>= hour 9) (<= hour 19)) ))
+    (dolist (theme (custom-available-themes))
+      (let* ((light-theme-p (string-match-p "-light" (symbol-name theme))))
+        (when (if prefer-light-p light-theme-p (not light-theme-p))
+          (push theme themes))))
+  (pickup-random-color-theme themes)))
+
 (defun switch-to-ansi-term ()
   (interactive)
   (let* ((buf-name (if *win64* "*shell*" "*ansi-term"))
@@ -962,10 +979,6 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
-
-;; But don't show trailing whitespace in REPL.
-(add-hook 'comint-mode-hook
-          (lambda () (setq show-trailing-whitespace nil)))
 
 ;; my screen is tiny, so I use minimum eshell prompt
 (eval-after-load 'eshell
@@ -1305,4 +1318,17 @@ Including indent-buffer, which should not be called automatically on save."
   (setq edit-server-new-frame nil)
   (edit-server-start))
 ;; }}
+
+(defun browse-current-file ()
+  "Open the current file as a URL using `browse-url'."
+  (interactive)
+  (browse-url-generic (concat "file://" (buffer-file-name))))
+
+;; {{ which-key-mode
+(local-require 'which-key)
+(setq which-key-allow-imprecise-window-fit t) ; performance
+(setq which-key-separator ":")
+(which-key-mode 1)
+;; }}
+
 (provide 'init-misc)
