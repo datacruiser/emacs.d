@@ -206,7 +206,7 @@
 (setq mac-command-modifier 'hyper)
 
 ;;configuration for the liberime input 
-(setq load-path (cons (file-truename "~/.emacs.d/") load-path))
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 (require 'pyim)
 (require 'posframe)
@@ -216,6 +216,6 @@
 (setq pyim-page-tooltip 'posframe)
 (setq pyim-page-length 9)
 
-(liberime-start "/Library/Input Methods/Squirrel.app/Contents/SharedSupport" (file-truename "~/.emacs.d/pyim/rime/"))
-(liberime-select-schema "luna_pinyin_simp")
-(setq pyim-default-scheme 'rime-quanpin)
+(liberime-start "~/Library/Rime" (file-truename "~/.emacs.d/pyim/rime/"))
+(liberime-select-schema "double_pinyin_flypy")
+(setq pyim-default-scheme 'xiaohe-shuangpin)
