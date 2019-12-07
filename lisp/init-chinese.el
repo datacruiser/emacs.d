@@ -40,10 +40,10 @@
 ;; }}
 
 ;; {{ pyim
-;;(defvar my-pyim-directory "~/.eim"
-;;  "The directory containing pyim dictionaries.")
+(defvar my-pyim-directory "~/.eim"
+  "The directory containing pyim dictionaries.")
 
-;;(add-auto-mode 'text-mode "\\.pyim\\'")
+(add-auto-mode 'text-mode "\\.pyim\\'")
 
 (eval-after-load 'pyim
   '(progn
@@ -58,20 +58,20 @@
 
      ;; automatically load all "*.pyim" under "~/.eim/"
      ;; `directory-files-recursively' requires Emacs 25
-  ;;   (let* ((files (and (file-exists-p my-pyim-directory)
-    ;;                    (directory-files-recursively my-pyim-directory "\.pyim$")))
-      ;;      disable-basedict)
-      ;; (when (and files (> (length files) 0))
-       ;;  (setq pyim-dicts
-       ;;        (mapcar (lambda (f)
-        ;;                 (list :name (file-name-base f) :file f))
-         ;;              files))
+    (let* ((files (and (file-exists-p my-pyim-directory)
+                        (directory-files-recursively my-pyim-directory "\.pyim$")))
+            disable-basedict)
+       (when (and files (> (length files) 0))
+         (setq pyim-dicts
+               (mapcar (lambda (f)
+                         (list :name (file-name-base f) :file f))
+                       files))
          ;; disable basedict if bigdict or greatdict is used
-       ;;  (dolist (f files)
-        ;;   (when (or (string= "pyim-bigdict" (file-name-base f))
-        ;;             (string= "pyim-greatdict" (file-name-base f)))
-        ;;     (setq disable-basedict t))))
-      ;; (unless disable-basedict (pyim-basedict-enable)))
+         (dolist (f files)
+           (when (or (string= "pyim-bigdict" (file-name-base f))
+                     (string= "pyim-greatdict" (file-name-base f)))
+             (setq disable-basedict t))))
+       (unless disable-basedict (pyim-basedict-enable)))
 
     ;; (setq pyim-fuzzy-pinyin-alist
     ;;       '(("en" "eng")
